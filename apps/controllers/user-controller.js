@@ -103,7 +103,8 @@ userController.getAccount = async (req, res)=>
                 email: userDoc.email,
                 image: userDoc.image,
                 createdAt: userDoc.createdAt,
-                updatedAt: userDoc.updatedAt 
+                updatedAt: userDoc.updatedAt, 
+                role: userDoc.role
             }
             res.json(tempObj);
         }

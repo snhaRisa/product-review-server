@@ -13,7 +13,9 @@ const configureDB = require('./configuration/configureDB');
 const authentication = require('./apps/middlewares/authentication');
 const authorization = require('./apps/middlewares/authorization');
 const userController = require('./apps/controllers/user-controller');
-const { userRegisterValidationSchema, userLoginValidationSchema }= require('./apps/helpers/user-validation');
+const productController = require('./apps/controllers/product-controller');
+const { userRegisterValidationSchema, userLoginValidationSchema } = require('./apps/helpers/user-validation');
+const productValidationSchema = require('./apps/helpers/product-validation');
 
 
 const app = express(); 
@@ -35,6 +37,12 @@ app.post('/login', checkSchema(userLoginValidationSchema), userController.login)
 //Private routes for user.
 app.get('/get-account', authentication, userController.getAccount); 
 app.post('/upload-image', authentication, userController.uploadUserImage);
+
+//Admin routes
+//Product related APIs. 
+app.post('/add-product', authorization, checkSchema(productValidationSchema), productController.addProduct);
+app.put('/update-product', authorization, checkSchema(productValidationSchema), productController.updateProduct); 
+app.delete('/delete-product', authorization, productController.deleteProduct);
 
 //Running the server. 
 app.listen(port, ()=>

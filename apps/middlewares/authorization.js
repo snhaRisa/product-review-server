@@ -11,13 +11,12 @@ const authorization = async (req, res, next)=>
     {
         const tokenData = jwt.verify(token, process.env.SECRET_KEY); 
         const id = tokenData._id; 
-
         try
         {
             const checkAdmin = await userModel.findById(id); 
             if(checkAdmin && checkAdmin.role === 'admin')
             {
-                req.user(checkAdmin); 
+                req.user = checkAdmin; 
                 next();
             }
             else
