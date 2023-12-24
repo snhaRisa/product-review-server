@@ -26,6 +26,12 @@ const userModelSchema = new Schema({
         enum: ['user', 'admin'], 
         default: 'user', 
         required: true
+    },
+    reviewHistory : {
+        type: Array
+    }, 
+    savedItems: {
+        type: Array
     }
 }, {timestamps: true});
 

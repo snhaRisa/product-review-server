@@ -5,6 +5,7 @@ const port = (process.env.PORT) || 4008;
 const express = require('express'); 
 const mongoose = require('mongoose'); 
 const cors = require('cors'); 
+const fileUpload = require('express-fileupload');
 
 const {checkSchema} = require('express-validator');
 
@@ -20,18 +21,20 @@ const app = express();
 //Middlewares. 
 app.use(express.json()); 
 app.use(cors()); 
+app.use(fileUpload({
+    useTempFiles: true //this is used to handle the path of our image.
+}));
 
 //Configuration of Atlas.
 configureDB(); 
-
 
 //authentication level APIs. 
 app.post('/register', checkSchema(userRegisterValidationSchema), userController.register); 
 app.post('/login', checkSchema(userLoginValidationSchema), userController.login);
 
 //Private routes for user.
-// app.get('/account-details', authentication, userController.getAccount); 
-
+app.get('/get-account', authentication, userController.getAccount); 
+app.post('/upload-image', authentication, userController.uploadUserImage);
 
 //Running the server. 
 app.listen(port, ()=>

@@ -2,9 +2,9 @@
 const jwt = require('jsonwebtoken'); 
 const userModel = require('../models/user-model');
 
-const authorization = async (request, response, next)=>
+const authorization = async (req, res, next)=>
 {
-    let token = request.headers['authorization']; 
+    let token = req.headers['authorization']; 
     token = token.split(' ')[1]; 
 
     if(token)
@@ -17,22 +17,22 @@ const authorization = async (request, response, next)=>
             const checkAdmin = await userModel.findById(id); 
             if(checkAdmin && checkAdmin.role === 'admin')
             {
-                request.user(checkAdmin); 
+                req.user(checkAdmin); 
                 next();
             }
             else
             {
-                response.status(400).json('Access Denied !'); 
+                res.status(400).json('Access Denied !'); 
             }
         }
         catch(err)
         {
-            response.status(400).status('Access Denied !'); 
+            res.status(400).status('Access Denied !'); 
         }
     }
     else
     {
-        response.status(403).json('Access Denied !'); 
+        res.status(403).json('Access Denied !'); 
     };
 };
 
