@@ -34,15 +34,30 @@ configureDB();
 app.post('/register', checkSchema(userRegisterValidationSchema), userController.register); 
 app.post('/login', checkSchema(userLoginValidationSchema), userController.login);
 
+//Public routes for user. 
+app.get('/get-all-products', productController.getProduct); 
+
 //Private routes for user.
 app.get('/get-account', authentication, userController.getAccount); 
 app.post('/upload-image', authentication, userController.uploadUserImage);
 
+//Product routes.
+app.get('/get-one-product/:productId', authentication, productController.getOneProduct);
+app.post('/add-review', authentication, productController.addReview);
+app.put('/add-product-like', authentication, productController.addProductLike);
+app.put('/add-product-dislike', authentication, productController.addProductDislike); 
+app.put('/add-review-like', authentication, productController.addReviewLike);
+app.put('/add-review-dislike', authentication, productController.addReviewDislike);
+
 //Admin routes
 //Product related APIs. 
+app.get('/get-product', authorization, productController.getProduct);
 app.post('/add-product', authorization, checkSchema(productValidationSchema), productController.addProduct);
 app.put('/update-product', authorization, checkSchema(productValidationSchema), productController.updateProduct); 
 app.delete('/delete-product', authorization, productController.deleteProduct);
+//User related APIs.
+app.get('/get-accounts', authorization, userController.getAccounts);
+app.delete('/delete-account', authorization, userController.deleteAccount); 
 
 //Running the server. 
 app.listen(port, ()=>

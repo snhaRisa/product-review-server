@@ -15,7 +15,6 @@ const productSchema = new Schema({
     image:{
         type: String, 
         required: true,
-        default: "" //only for testing purpose then delete this. 
     },
     category: {
         type: String, 
@@ -39,6 +38,10 @@ const productSchema = new Schema({
     ],
     reviews: [
         {
+            productId: {
+                type: Schema.Types.ObjectId, 
+                ref: 'ProductModel'
+            },
             userId:{
                 type: Schema.Types.ObjectId, 
                 ref: 'userModel'
@@ -54,7 +57,23 @@ const productSchema = new Schema({
                 type: Date, 
                 default: Date.now, 
                 required: true
-            }
+            }, 
+            likes: [
+                {
+                    userId:{
+                        type: Schema.Types.ObjectId, 
+                        ref: 'userModel'
+                    }
+                }
+            ], 
+            dislikes: [
+                {
+                    userId:{
+                        type: Schema.Types.ObjectId, 
+                        ref: 'userModel'
+                    }
+                }
+            ]
         }
     ] 
 });

@@ -67,7 +67,7 @@ userController.login = async (req, res)=>
                 const tokenData = {
                     _id : checkUser._id
                 }; 
-                const expiresIn = '1h';
+                const expiresIn = '6h';
                 const token = jwt.sign(tokenData, process.env.SECRET_KEY, {expiresIn}); 
                 res.json(`Bearer ${token}`); 
             }
@@ -161,6 +161,35 @@ userController.uploadUserImage = async (req, res)=>
     {
         res.status(400).json('Error uploading image!');
     }
-}
+};
+
+//Admin controls. 
+userController.getAccounts = async (req, res)=>
+{
+    try
+    {
+        const remainingDocs = await userModel.find(); 
+        res.json(remainingDocs);
+    }
+    catch(err)
+    {
+        res.status(400).json('Error retrieving all documents.'); 
+    }
+};
+
+userController.deleteAccount = async (req, res)=>
+{
+    const userId = req.body.id;
+    try
+    {
+        const deleteDoc = await userModel.findByIdAndDelete(userId); 
+        const remainingDocs = await userModel.find(); 
+        res.json(remainingDocs);
+    }
+    catch(err)
+    {
+        res.status(400).json('Error deleting the account.');
+    }
+};
 
 module.exports = userController; 
