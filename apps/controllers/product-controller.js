@@ -371,11 +371,25 @@ productController.deleteReviewUser = async (req, res)=>
             {new: true}
         );
 
-        const productDoc = await ProductModel.findById(productId).populate('reviews.productId');
-        res.json(productDoc);
+        const products = await ProductModel.find().populate('reviews.productId'); 
+
+        const reviews = []; 
+        for(const obj of products)
+        {
+            for(const review of obj.reviews)
+            {
+                if(review.userId.equals(userId))
+                {
+                    reviews.push(review);
+                }
+            }
+        };
+
+        res.json(reviews);
     }
     catch(err)
     {
+        console.error(err);
         res.status(400).json('Error deleting the review');
     }
 }
@@ -387,7 +401,10 @@ productController.addProductLike = async (req, res)=>
         const {productId, userId} = req.body; 
 
         const updateDoc = await ProductModel.findByIdAndUpdate(productId, 
-            {$push: {likes: {userId: userId}}}, 
+            {
+                $push: {likes: {userId: userId}}, 
+                $pull: {dislikes: {userId: userId}},
+            }, 
             {new: true}
         ).populate('reviews.userId'); 
 
@@ -396,6 +413,27 @@ productController.addProductLike = async (req, res)=>
     catch(err)
     {
         res.status(400).json('Error while liking the product.');
+    };
+};
+
+productController.addProductDislike = async (req, res)=>
+{
+    try
+    {
+            const {productId, userId} = req.body; 
+            const updateDoc = await ProductModel.findByIdAndUpdate(productId, 
+                {
+                    $push: {dislikes: {userId: userId}}, 
+                    $pull: {likes: {userId: userId}}
+                },
+                {new: true} 
+            ).populate('reviews.userId');
+
+        res.json(updateDoc);
+    }
+    catch(err)
+    {
+        res.status(400).json('Error while disliking the product.');
     };
 };
 
