@@ -46,6 +46,7 @@ app.get('/get-all-reviews', authentication, productController.getAllReviews);
 app.get('/get-one-product/:productId', authentication, productController.getOneProduct);
 app.post('/add-review', authentication, productController.addReview);
 app.put('/add-product-like', authentication, productController.addProductLike);
+app.put('/add-product-dislike', authentication, productController.addProductDislike);
 app.put('/add-review-like', authentication, productController.addReviewLike);
 app.put('/add-review-dislike', authentication, productController.addReviewDislike);
 app.put('/edit-review', authentication, productController.editReview);
